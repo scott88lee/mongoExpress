@@ -57,8 +57,27 @@ router.get('/tx', async (req, res) => {
 
     try {
         session.startTransaction(transactionOptions);
+        Users = db.query().collection('users');
+        Preferences = db.query().collection('preferences');
+        //do your Tx here
+        let scott = await Users.findOne({name:"Scott"}, {session})
+        
+        if (scott.age < 35) {
+            let pref = await Preferences.findOne({name: scott.name}, {session})
+            console.log(pref)
+            let happy = true
+            if (pref.happy){
+                happy = !pref.happy
+            }
+            await Preferences.updateOne({name:"Scott"}, {$set:{happy:happy}}, {}, {session})
+        } else {
+            throw new Error('Too old')
+        }
+
+        await session.commitTransaction();
     } catch (error) {
         console.log('Encountered an error during the transaction: ' + error);
+        await session.abortTransaction();
     } finally {
         await session.endSession();
         res.send('Done')
