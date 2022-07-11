@@ -1,5 +1,8 @@
 let { MongoClient } = require('mongodb');
-let uri = 'mongodb+srv://test:pwd@homage.cecrjtt.mongodb.net/?retryWrites=true&w=majority'
+let uri = process.env.DB_URI || false;
+if (!uri) {
+    console.log('No DB_URI found in .env');
+}
 
 let mongodb;
 let client;

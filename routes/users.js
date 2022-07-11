@@ -11,6 +11,14 @@ router.get('/', async (req, res) => {
     res.send(result)
 })
 
+router.post("/proto", async (req, res) => {
+    Orders = db.query().collection('orders')
+
+    let result = await Orders.insertOne({name:"Scott", age:30})
+    
+    res.send(result)
+})
+
 router.get('/insertmany', async (req, res) => {
     function generatePerson() {
         let charset = "ACABABACIDIDIDODO"
